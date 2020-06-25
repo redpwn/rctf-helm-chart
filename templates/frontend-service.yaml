@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "rctf.fullname" . }}-frontend
+  labels:
+{{ include "rctf.labels" . | indent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: {{ include "rctf.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    rctf.redpwn.net/instance-type: frontend

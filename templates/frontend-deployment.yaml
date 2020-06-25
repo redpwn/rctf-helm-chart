@@ -1,0 +1,65 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ template "rctf.fullname" . }}-frontend
+  labels:
+{{ include "rctf.labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "rctf.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      rctf.redpwn.net/instance-type: frontend
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "rctf.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        rctf.redpwn.net/instance-type: frontend
+      annotations:
+        checksum/configmap: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ default .Chart.AppVersion .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: PORT
+              value: "3000"
+            - name: RCTF_INSTANCE_TYPE
+              value: frontend
+            {{- include "rctf.envVars" . | nindent 12 }}
+          volumeMounts:
+            - name: config
+              mountPath: /app/dist/config/yml
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+      volumes:
+        - name: config
+          configMap:
+            name: {{ template "rctf.fullname" . }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

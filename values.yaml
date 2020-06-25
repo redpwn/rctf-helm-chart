@@ -1,0 +1,175 @@
+# Default values for rctf.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: redpwn/rctf
+  tag: 34208f4c523ff1ecc2848d7180a63f64a85ed32b
+  pullPolicy: IfNotPresent
+
+# Used for emails
+rctfName: rCTF
+
+# 32 byte base64 encoded secret for signing tokens
+tokenKey: ""
+
+# (optional) The host rCTF is accessible on - only necessary if you need to set
+# this to something other than your ingress's host
+#origin: https://example.com
+
+#logoUrl: https://example.com/logo-256.png
+
+postgres:
+  #host: example
+
+  port: 5432
+
+  #user: postgres
+
+  #password: password
+
+  # Name of secret containing postgres password. Overrides postgres.password
+  #passwordSecret: secret-name
+
+  passwordSecretKey: postgresql-postgres-password
+
+  #database: rctf
+
+redis:
+  #host: example
+
+  port: 6379
+
+  #password: password
+
+  # Name of secret containing redis password. Overrides redis.password.
+  #passwordSecret: secret-name
+
+  passwordSecretKey: redis-password
+
+  database: 0
+
+#email:
+  #from: example@example.org
+  #verify: true
+  # One of:
+  #smtpProvider:
+    #url: smtp://user:password@smtp.server:587
+    # Name of secret containing SMTP url. Overrides email.smtpProvider.url.
+    #urlSecret: secret-name
+    #urlSecretKey: url
+  #sesProvider:
+    #awsKeyId: AAAAAA
+    #awsKeySecret: abcd
+    #awsRegion: aa-bbbb-1
+    # Name of secret containing SES credentials. Overrides above options if key
+    # is provided.
+    #credentialsSecret: secret-name
+    #secretAwsKeyIdKey: aws-key-id
+    #secretAwsKeySecretKey: aws-key-secret
+    #secretAwsRegionKey: aws-region
+  #otherProvider:
+    #name: name
+    #options: {}
+
+ctftime:
+  clientId: ""
+  clientSecret: ""
+
+times:
+  start: # 2020-01-01T20:00:00Z
+  end:   # 2020-01-05T20:00:00Z
+
+#gcs:
+  #bucket: name
+  # (Optional) Manually supply credentials (defaults to application default
+  # credentials)
+  #credentials:
+    #private_key: ""
+    #client_email: ""
+
+config:
+  client:
+    meta:
+      description: A description of your CTF
+      imageUrl: https://example.com/logo.png
+
+    homeContent: A description of your CTF. Markdown supported.
+
+    sponsors:
+    - name: 'Big Sponsor'
+      icon: 'https://redpwn.net/logo.png'
+      description: 'Brief description. Markdown supported.'
+    - name: 'Smaller Sponsor'
+      description: 'Brief description. Markdown supported.'
+      small: true
+
+    apiEndpoint: /api/v1
+
+  shared:
+    divisions:
+      'High School': 0
+      College: 1
+      Other: 2
+    defaultDivision: 2
+
+  server:
+    challengeProvider:
+      name: challenges/database
+      options:
+        updateInterval: 60000
+
+    uploadProvider:
+      name: uploads/gcs
+      options: {}
+
+    leaderboard:
+      maxLimit: 100
+      maxOffset: 4294967296 # 2^32
+      updateInterval: 10000
+      graphMaxTeams: 10
+      graphSampleTime: 600000
+
+    removeDownloadHashes: true
+    loginTimeout: 3600000
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths: []
+
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
