@@ -32,7 +32,7 @@ spec:
             {{- include "rctf.envVars" . | nindent 12 }}
           volumeMounts:
             - name: config
-              mountPath: /app/dist/config/yml
+              mountPath: /app/conf.d
           resources:
 {{ toYaml .Values.resources | indent 12 }}
       volumes:

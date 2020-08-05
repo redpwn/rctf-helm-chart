@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: redpwn/rctf
-  tag: 34208f4c523ff1ecc2848d7180a63f64a85ed32b
+  tag: 35c88ec11204bcb7349775c7a8e9f3eafafd0755
   pullPolicy: IfNotPresent
 
 # Used for emails
@@ -53,7 +53,6 @@ redis:
 
 #email:
   #from: example@example.org
-  #verify: true
   # One of:
   #smtpProvider:
     #url: smtp://user:password@smtp.server:587
@@ -91,49 +90,41 @@ times:
     #client_email: ""
 
 config:
-  client:
-    meta:
-      description: A description of your CTF
-      imageUrl: https://example.com/logo.png
+  meta:
+    description: A description of your CTF
+    imageUrl: https://example.com/logo.png
 
-    homeContent: A description of your CTF. Markdown supported.
+  homeContent: A description of your CTF. Markdown supported.
 
-    sponsors:
-    - name: 'Big Sponsor'
-      icon: 'https://redpwn.net/logo.png'
-      description: 'Brief description. Markdown supported.'
-    - name: 'Smaller Sponsor'
-      description: 'Brief description. Markdown supported.'
-      small: true
+  sponsors:
+  - name: 'Big Sponsor'
+    icon: 'https://redpwn.net/logo.png'
+    description: 'Brief description. Markdown supported.'
+  - name: 'Smaller Sponsor'
+    description: 'Brief description. Markdown supported.'
+    small: true
 
-    apiEndpoint: /api/v1
+  divisions:
+    hs: High School
+    college: College
+    other: Other
+  defaultDivision: other
 
-  shared:
-    divisions:
-      'High School': 0
-      College: 1
-      Other: 2
-    defaultDivision: 2
+  challengeProvider:
+    name: challenges/database
 
-  server:
-    challengeProvider:
-      name: challenges/database
-      options:
-        updateInterval: 60000
+  uploadProvider:
+    name: uploads/gcs
+    options: {}
 
-    uploadProvider:
-      name: uploads/gcs
-      options: {}
+  leaderboard:
+    maxLimit: 100
+    maxOffset: 4294967296 # 2^32
+    updateInterval: 10000
+    graphMaxTeams: 10
+    graphSampleTime: 600000
 
-    leaderboard:
-      maxLimit: 100
-      maxOffset: 4294967296 # 2^32
-      updateInterval: 10000
-      graphMaxTeams: 10
-      graphSampleTime: 600000
-
-    removeDownloadHashes: true
-    loginTimeout: 3600000
+  loginTimeout: 3600000
 
 nameOverride: ""
 fullnameOverride: ""

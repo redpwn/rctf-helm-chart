@@ -59,6 +59,8 @@ Token key
 rCTF shared environment variables
 */}}
 {{- define "rctf.envVars" -}}
+- name: RCTF_CONF_PATH
+  value: /app/conf.d
 - name: RCTF_TOKEN_KEY
   valueFrom:
     secretKeyRef:

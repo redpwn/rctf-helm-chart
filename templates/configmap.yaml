@@ -5,37 +5,28 @@ metadata:
   labels:
 {{ include "rctf.labels" . | indent 4 }}
 data:
-  client.yml: |-
-  {{- range $key, $value := .Values.config.client }}
-    {{ $key }}: {{ $value | mustToJson }}
-  {{- end }}
-  shared.yml: |-
-  {{- range $key, $value := .Values.config.shared }}
-    {{ $key }}: {{ $value | mustToJson }}
-  {{- end }}
+  00-generated-config.yml: |-
     ctfName: {{ .Values.rctfName | quote }}
   {{- if or .Values.ingress.enabled .Values.origin }}
     origin: {{ default (list "https://" (index .Values.ingress.hosts 0).host | join "") .Values.origin | quote }}
   {{- end }}
     startTime: {{ required "times.start is required" .Values.times.start | mustToDate "2006-01-02T15:04:05Z07:00" | unixEpoch | mul 1000 }}
     endTime: {{ required "times.end is required" .Values.times.end | mustToDate "2006-01-02T15:04:05Z07:00" | unixEpoch | mul 1000 }}
-  server.yml: |-
-  {{- range $key, $value := .Values.config.server }}
-    {{ $key }}: {{ $value | mustToJson }}
-  {{- end }}
   {{- with .Values.logoUrl }}
     logoUrl: {{ . | quote }}
   {{- end }}
   {{- with .Values.email }}
-    verifyEmail: {{ default true .verify }}
-    emailFrom: {{ required "email.from is required" .from | quote }}
-    emailProvider:
-    {{- with .smtpProvider }}
-      name: emails/smtp
-      options: {}
-    {{- end }}
-    {{- with .sesProvider }}
-      name: emails/ses
-      options: {}
-    {{- end }}
+    email:
+      from: {{ required "email.from is required" .from | quote }}
+      provider:
+      {{- with .smtpProvider }}
+        name: emails/smtp
+        options: {}
+      {{- end }}
+      {{- with .sesProvider }}
+        name: emails/ses
+        options: {}
+      {{- end }}
   {{- end }}
+  01-verbatim-config.json: |-
+    {{ .Values.config | mustToJson }}
