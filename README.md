@@ -4,7 +4,7 @@
 
 This chart bootstraps an rCTF deployment on a [Kubernetes][k8s] Cluster using
 the [Helm][helm] package manager. It requires both a [PostgreSQL][postgres]
-server and a [Redis][redis] server to connect to; connection parmeters are set
+server and a [Redis][redis] server to connect to; connection parameters are set
 in the `postgres` and `redis` values, respectively.
 
 Since rCTF is currently under active development and does not yet have tagged
